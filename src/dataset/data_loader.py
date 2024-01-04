@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 from src.dataset import image_augmentation
 
 
-class Nougat_Dataset(Dataset):
+class Sumen_Dataset(Dataset):
     def __init__(
         self,
         df,

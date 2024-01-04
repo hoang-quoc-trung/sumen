@@ -5,7 +5,7 @@ import argparse
 import pandas as pd
 from src.models import sumen_model
 from src.utils.metrics import Metrics
-from src.dataset.data_loader import Nougat_Dataset
+from src.dataset.data_loader import Sumen_Dataset
 from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
@@ -36,7 +36,7 @@ def main(args):
     test_df = pd.read_csv(config['datasets']['test']['dataframe_path'])
     logger.info("Total test dataset: {}".format(len(test_df)))
     
-    test_dataset = Nougat_Dataset(
+    test_dataset = Sumen_Dataset(
         test_df,
         phase='test',
         root_dir=config['datasets']['test']['images_root'],

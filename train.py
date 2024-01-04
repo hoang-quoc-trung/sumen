@@ -9,7 +9,7 @@ import pandas as pd
 from lion_pytorch import Lion
 from src.models import sumen_model
 from src.utils.metrics import Metrics
-from src.dataset.data_loader import Nougat_Dataset
+from src.dataset.data_loader import Sumen_Dataset
 from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
@@ -47,7 +47,7 @@ def main(args):
     logger.info("Total eval dataset: {}".format(len(val_df)))
     
     # Initialize dataloader
-    train_dataset = Nougat_Dataset(
+    train_dataset = Sumen_Dataset(
         train_df,
         phase='train',
         root_dir=config['datasets']['train']['images_root'],
@@ -55,7 +55,7 @@ def main(args):
         processor=processor.image_processor,
         max_length=config['hyperparams']['max_length'],
     )
-    val_dataset = Nougat_Dataset(
+    val_dataset = Sumen_Dataset(
         val_df,
         phase='eval',
         root_dir=config['datasets']['eval']['images_root'],
