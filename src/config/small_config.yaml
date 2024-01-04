@@ -1,0 +1,45 @@
+wandb:
+  key: ~
+  project_name: ~
+
+huggingface:
+  hub_model_id: ~
+  hub_token: ~
+
+datasets:
+  num_workers: 4
+  train:
+    images_root: /kaggle/input/fui2l-dataset/root/images
+    dataframe_path: /kaggle/input/fui2l-dataset/train/total_train.csv
+    batch_size: 10
+  eval:
+    images_root: /kaggle/input/fui2l-dataset/root/images
+    dataframe_path: /kaggle/input/fui2l-dataset/val/small_total_val.csv
+    batch_size: 10
+  test:
+    images_root: /kaggle/input/fui2l-dataset/root/images
+    dataframe_path: /kaggle/input/fui2l-dataset/test/img2latex_100k_test.csv
+    batch_size: 10
+
+hyperparams:
+  pretrained_model_name_or_path: facebook/nougat-small
+  save_dir: /kaggle/working/small_checkpoints
+  epochs: 20
+  eval_steps: 50
+  save_steps: 50
+  logging_steps: 1
+  gradient_accumulation_steps: 280
+  random_seed: 0
+  optimizer:
+    lr: 1e-4
+    weight_decay: 1e-2
+    beta1: 0.95
+    beta2: 0.98
+  warmup_steps: 200
+  max_length: 512
+  num_beams: 4
+  early_stopping: True
+  top_p: 1.0
+  top_k: 50
+  length_penalty: 1.0
+  image_size: [224, 468]
