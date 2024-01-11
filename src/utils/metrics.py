@@ -25,21 +25,24 @@ class Metrics:
                 pred_str[i], 
                 label_str[i]
             )/max(len(pred_str[i]),len(label_str[i]))
-            total_edit_distance = total_edit_distance + edit_distance
+            total_edit_distance += edit_distance
             # Compute bleu score
-            bleu = self.bleu.compute(
-                predictions=[pred_str[i]],
-                references=[label_str[i]],
-                max_order=4 # Maximum n-gram order to use when computing BLEU score
-            )
-            total_bleu = total_bleu + bleu['bleu']
+            try:
+                bleu = self.bleu.compute(
+                    predictions=[pred_str[i]],
+                    references=[label_str[i]],
+                    max_order=4 # Maximum n-gram order to use when computing BLEU score
+                )
+                total_bleu += bleu['bleu']
+            except ZeroDivisionError:
+                total_bleu += 0
             # Compute exact match score
             exact_match = self.exact_match.compute(
                 predictions=[pred_str[i]],
                 references=[label_str[i]],
                 regexes_to_ignore=[' ']
             )
-            total_exact_match = total_exact_match + exact_match['exact_match']
+            total_exact_match += exact_match['exact_match']
         bleu = total_bleu / len(pred_str)
         exact_match = total_exact_match / len(pred_str)
         # Convert minimun edit distance score to maximun edit distance score

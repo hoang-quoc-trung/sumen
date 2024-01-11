@@ -9,26 +9,26 @@ huggingface:
 datasets:
   num_workers: 4
   train:
-    images_root: /kaggle/input/fui2l-dataset/root/images
-    dataframe_path: /kaggle/input/fui2l-dataset/train/total_train.csv
-    batch_size: 10
+    images_root: ~
+    dataframe_path: ~
+    batch_size: 8
   eval:
-    images_root: /kaggle/input/fui2l-dataset/root/images
-    dataframe_path: /kaggle/input/fui2l-dataset/val/small_total_val.csv
-    batch_size: 10
+    images_root: ~
+    dataframe_path: ~
+    batch_size: 8
   test:
-    images_root: /kaggle/input/fui2l-dataset/root/images
-    dataframe_path: /kaggle/input/fui2l-dataset/test/img2latex_100k_test.csv
-    batch_size: 10
+    images_root: ~
+    dataframe_path: ~
+    batch_size: 8
 
 hyperparams:
   pretrained_model_name_or_path: facebook/nougat-small
-  save_dir: /kaggle/working/small_checkpoints
-  epochs: 20
+  save_dir: ~
+  epochs: 10
   eval_steps: 50
   save_steps: 50
   logging_steps: 1
-  gradient_accumulation_steps: 280
+  gradient_accumulation_steps: 300
   random_seed: 0
   optimizer:
     lr: 1e-4
