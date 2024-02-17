@@ -40,7 +40,7 @@ class Metrics:
             exact_match = self.exact_match.compute(
                 predictions=[pred_str[i]],
                 references=[label_str[i]],
-                regexes_to_ignore=[' ']
+                # regexes_to_ignore=[' '],
             )
             total_exact_match += exact_match['exact_match']
         bleu = total_bleu / len(pred_str)
