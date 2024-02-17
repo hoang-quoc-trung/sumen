@@ -54,6 +54,7 @@ def main(args):
         tokenizer=processor.tokenizer,
         processor=processor.image_processor,
         max_length=config['hyperparams']['max_length'],
+        image_size=config['hyperparams']['image_size'],
     )
     val_dataset = Sumen_Dataset(
         val_df,
@@ -62,6 +63,7 @@ def main(args):
         tokenizer=processor.tokenizer,
         processor=processor.image_processor,
         max_length=config['hyperparams']['max_length'],
+        image_size=config['hyperparams']['image_size'],
     )
     
     # Config trainer 

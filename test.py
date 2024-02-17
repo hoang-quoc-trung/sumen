@@ -43,6 +43,7 @@ def main(args):
         tokenizer=processor.tokenizer,
         processor=processor.image_processor,
         max_length=config['hyperparams']['max_length'],
+        image_size=config['hyperparams']['image_size'],
     )
     
     training_args = Seq2SeqTrainingArguments(

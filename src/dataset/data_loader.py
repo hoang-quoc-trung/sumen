@@ -14,6 +14,7 @@ class Sumen_Dataset(Dataset):
         root_dir,
         tokenizer,
         processor,
+        image_size,
         max_length=512,
     ):
         self.df = df
@@ -21,6 +22,7 @@ class Sumen_Dataset(Dataset):
         self.phase = phase 
         self.tokenizer= tokenizer
         self.processor = processor
+        self.image_size = image_size
         self.max_length = max_length
         self.train_transform = image_augmentation.train_transform()
         
@@ -43,12 +45,19 @@ class Sumen_Dataset(Dataset):
             img = Image.fromarray(img)
         else:
             img = Image.open(img_path).convert("RGB")
-            
-        pixel_values = self.processor(
-            images=img,
-            return_tensors="pt",
-            data_format="channels_first"
-        ).pixel_values
+                
+        try:
+            pixel_values = self.processor(
+                images=img,
+                return_tensors="pt",
+                data_format="channels_first"
+            ).pixel_values
+        except ZeroDivisionError: 
+            # Image error, empty latex in image
+            print("Error in image:", image)
+            pixel_values = torch.zeros((3, self.image_size[0], self.image_size[1]))
+            latex_sequences = ""
+    
         latex_sequences = self.tokenizer(
             latex_sequence,
             padding='max_length',
