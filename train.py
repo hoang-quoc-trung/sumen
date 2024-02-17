@@ -91,6 +91,7 @@ def main(args):
         dataloader_num_workers=config['datasets']['num_workers'],
         gradient_accumulation_steps=config['hyperparams']['gradient_accumulation_steps'],
         eval_accumulation_steps=config['hyperparams']['gradient_accumulation_steps'],
+        save_safetensors=True,
         push_to_hub=True,
         hub_model_id=config['huggingface']['hub_model_id'],
         hub_token=config['huggingface']['hub_token'],
