@@ -25,7 +25,7 @@ class Metrics:
                 pred_str[i], 
                 label_str[i]
             )/max(len(pred_str[i]),len(label_str[i]))
-            total_edit_distance += edit_distance
+            total_edit_distance = total_edit_distance + edit_distance
             # Compute bleu score
             try:
                 bleu = self.bleu.compute(
@@ -35,14 +35,14 @@ class Metrics:
                 )
                 total_bleu += bleu['bleu']
             except ZeroDivisionError:
-                total_bleu += 0
+                total_bleu+=0
             # Compute exact match score
             exact_match = self.exact_match.compute(
                 predictions=[pred_str[i]],
                 references=[label_str[i]],
-                # regexes_to_ignore=[' '],
+                regexes_to_ignore=[' ']
             )
-            total_exact_match += exact_match['exact_match']
+            total_exact_match = total_exact_match + exact_match['exact_match']
         bleu = total_bleu / len(pred_str)
         exact_match = total_exact_match / len(pred_str)
         # Convert minimun edit distance score to maximun edit distance score
@@ -50,7 +50,7 @@ class Metrics:
         # Compute word error rate score
         wer = self.wer.compute(predictions=pred_str, references=label_str)
         # Compute expression rate score
-        exprate = compute_exprate(predictions=pred_str, references=label_str)
+        exprate, exprate_error1, exprate_error2, exprate_error3 = compute_exprate(predictions=pred_str, references=label_str)
         
         return {
             "bleu": round(bleu*100, 2),
@@ -58,4 +58,7 @@ class Metrics:
             "exact_match": round(exact_match*100, 2),
             "wer": round(wer*100, 2),
             "exprate": round(exprate*100, 2),
+            "exprate_error_1": round(exprate_error1*100, 2),
+            "exprate_error_2": round(exprate_error2*100, 2),
+            "exprate_error_3": round(exprate_error3*100, 2),
         }

@@ -32,6 +32,9 @@ def compute_exprate(predictions, references):
     total_label = 0
     total_line = 0
     total_line_rec = 0
+    total_line_error1 = 0
+    total_line_error2 = 0 
+    total_line_error3 = 0
     for i in range(len(references)):
         pre = predictions[i].split()
         ref = references[i].split()
@@ -40,5 +43,15 @@ def compute_exprate(predictions, references):
         total_line += 1
         if dist == 0:
             total_line_rec += 1
+        elif dist ==1:
+            total_line_error1 +=1
+        elif dist ==2:
+            total_line_error2 +=1
+        elif dist ==3:
+            total_line_error3 +=1
+
     exprate = float(total_line_rec)/total_line
-    return exprate
+    exprate_error1 = float(total_line_error1 + total_line_rec)/total_line
+    exprate_error2 = float(total_line_error2 + total_line_error1 +total_line_rec)/total_line
+    exprate_error3 = float(total_line_error3 + total_line_error2 + total_line_error1 +total_line_rec)/total_line
+    return exprate, exprate_error1, exprate_error2, exprate_error3
