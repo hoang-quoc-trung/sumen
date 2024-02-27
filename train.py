@@ -6,6 +6,7 @@ import logging
 import argparse
 import transformers
 import pandas as pd
+import huggingface_hub
 from lion_pytorch import Lion
 from src.models import sumen_model
 from src.utils.metrics import Metrics
@@ -36,6 +37,9 @@ def main(args):
     # Initialize wandb
     wandb.login(key=config['wandb']['key'])
     wandb.init(project=config['wandb']['project_name'])
+    
+    # Login to huggingface hub
+    huggingface_hub.login(config['huggingface']['hub_token'])
     
     # Initialize model
     model, processor = sumen_model.init_model(config, logger)

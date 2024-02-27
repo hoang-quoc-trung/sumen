@@ -28,7 +28,7 @@ hyperparams:
   eval_steps: 50
   save_steps: 50
   logging_steps: 1
-  gradient_accumulation_steps: 300
+  gradient_accumulation_steps: 256
   random_seed: 0
   optimizer:
     lr: 1e-4
@@ -43,3 +43,10 @@ hyperparams:
   top_k: 50
   length_penalty: 1.0
   image_size: [224, 468]
+  fine_tune_lora_adapter:
+    enable: False
+    adapter_name: fine_tune_handwritten_math_formula
+    alpha: 64
+    dropout: 0.05
+    r: 32
+    target_modules: ["q_proj", "v_proj", "k_proj", "out_proj", "query", "key", "value"]

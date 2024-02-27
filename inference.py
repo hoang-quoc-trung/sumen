@@ -2,8 +2,11 @@ import torch
 import logging
 import argparse
 from PIL import Image
-from transformers import AutoProcessor
-from transformers import VisionEncoderDecoderModel
+from src.utils import common_utils
+from transformers import (
+    AutoProcessor,
+    VisionEncoderDecoderModel
+)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s %(levelname)-8s %(message)s"
@@ -14,14 +17,8 @@ logger.setLevel(logging.INFO)
 
 def main(args):
     # Get the device
-    if torch.cuda.is_available():    
-        device = torch.device("cuda")
-        logger.info("There are {} GPU(s) available.".format(torch.cuda.device_count()))
-        logger.info('We will use the GPU: {}'.format(torch.cuda.get_device_name(0)))
-    else:
-        logger.info('No GPU available, using the CPU instead.')
-        device = torch.device("cpu")
-
+    device = common_utils.check_device(logger)
+    
     # Init model
     model = VisionEncoderDecoderModel.from_pretrained(
         args.ckpt

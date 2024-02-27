@@ -3,13 +3,16 @@ import yaml
 import logging
 import argparse
 import pandas as pd
-from src.models import sumen_model
+import huggingface_hub
+from src.utils import common_utils
 from src.utils.metrics import Metrics
 from src.dataset.data_loader import Sumen_Dataset
 from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
-    default_data_collator
+    default_data_collator,
+    VisionEncoderDecoderModel,
+    AutoProcessor
 )
 
 logging.basicConfig(
@@ -29,10 +32,21 @@ def main(args):
     # Load the config file
     config = yaml.safe_load(open(args.config_path))
     
-    config['hyperparams']['pretrained_model_name_or_path'] = args.ckpt
+    # Login to huggingface hub
+    huggingface_hub.login(config['huggingface']['hub_token'])
+
+    # Get the device
+    device = common_utils.check_device(logger)
     
-    model, processor = sumen_model.init_model(config, logger)
+    # Init model
+    model = VisionEncoderDecoderModel.from_pretrained(
+        args.ckpt
+    ).to(device)
+
+    # Init processor
+    processor = AutoProcessor.from_pretrained(args.ckpt)
     
+    # Load dataset
     test_df = pd.read_csv(config['datasets']['test']['dataframe_path'])
     logger.info("Total test dataset: {}".format(len(test_df)))
     
@@ -54,6 +68,7 @@ def main(args):
         predict_with_generate=True, 
         do_train=False,
         do_eval=True,
+        report_to=None,
         dataloader_num_workers=config['datasets']['num_workers'],
         eval_accumulation_steps=config['hyperparams']['gradient_accumulation_steps'],
     )

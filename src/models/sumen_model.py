@@ -3,6 +3,7 @@ from transformers import (
     VisionEncoderDecoderConfig,
     AutoProcessor
 )
+from peft import inject_adapter_in_model, LoraConfig
 from src.utils import common_utils
 
 
@@ -32,9 +33,26 @@ def init_model(config, logger):
     # model.config.no_repeat_ngram_size = 3
     model.config.decoder_start_token_id = processor.tokenizer.bos_token_id
     model.config.pad_token_id = processor.tokenizer.pad_token_id
-    device = common_utils.check_device(logger)
-    model = model.to(device)
-    total_parameter = sum([param.nelement() for param in model.parameters()])
-    logger.info("Number of parameter: {}M ({})".format(round(total_parameter/1000000), total_parameter))
+
+    if model_args['fine_tune_lora_adapter']['enable'] is True:
+        lora_config = LoraConfig(
+            lora_alpha=model_args['fine_tune_lora_adapter']['alpha'],
+            lora_dropout=model_args['fine_tune_lora_adapter']['dropout'],
+            r=model_args['fine_tune_lora_adapter']['r'],
+            bias="none",
+            target_modules=model_args['fine_tune_lora_adapter']['target_modules'],
+        )   
+        model = inject_adapter_in_model(lora_config, model)
+        model.add_adapter(
+            lora_config,
+            adapter_name=model_args['fine_tune_lora_adapter']['adapter_name']
+        )
+        model.enable_adapters()
+        common_utils.print_trainable_parameters(model, logger)
+    else:
+        device = common_utils.check_device(logger)
+        model = model.to(device)
+        total_parameter = sum([param.nelement() for param in model.parameters()])
+        logger.info("Number of parameter: {}M ({})".format(round(total_parameter/1000000), total_parameter))
     
     return model, processor
