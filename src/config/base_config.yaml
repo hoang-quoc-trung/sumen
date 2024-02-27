@@ -39,8 +39,6 @@ hyperparams:
   max_length: 512
   num_beams: 4
   early_stopping: True
-  top_p: 1.0
-  top_k: 50
   length_penalty: 1.0
   image_size: [224, 468]
   fine_tune_lora_adapter:

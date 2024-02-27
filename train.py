@@ -42,7 +42,11 @@ def main(args):
     huggingface_hub.login(config['huggingface']['hub_token'])
     
     # Initialize model
-    model, processor = sumen_model.init_model(config, logger)
+    model, processor = sumen_model.init_model(
+        config,
+        logger,
+        args.resume_from_checkpoint
+    )
     
     # Load dataset for training
     train_df = pd.read_csv(config['datasets']['train']['dataframe_path'])
