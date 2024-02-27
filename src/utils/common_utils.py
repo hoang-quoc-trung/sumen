@@ -1,3 +1,5 @@
+import os
+import csv
 import torch
 import numpy
 
@@ -13,6 +15,53 @@ def check_device(logger=None):
     return device
 
 
+def save_log(
+    loss: float,
+    bleu: float,
+    edit_distance: float,
+    exact_match: float,
+    wer: float,
+    exprate: float,
+    exprate_error_1: float,
+    exprate_error_2: float,
+    exprate_error_3: float,
+    file_name="test_log.csv",
+):
+    
+    os.makedirs('log', exist_ok=True)
+    file_path = os.path.join('log', file_name)
+    with open(file_path, mode="a", newline="") as csv_file:
+        fieldnames = [
+            "loss",
+            "bleu",
+            "edit_distance",
+            "exact_match",
+            "wer",
+            "exprate",
+            "exprate_error_1",
+            "exprate_error_2",
+            "exprate_error_3"
+        ]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        # write the header row
+        if csv_file.tell() == 0:
+            writer.writeheader()
+        # write the data row
+        writer.writerow(
+            {
+                "loss": loss,
+                "bleu": bleu,
+                "edit_distance": edit_distance,
+                "exact_match": exact_match,
+                "wer": wer,
+                "exprate": exprate,
+                "exprate_error_1": exprate_error_1,
+                "exprate_error_2": exprate_error_2,
+                "exprate_error_3": exprate_error_3,
+            }
+        )
+
+
 def cmp_result(label,rec):
     dist_mat = numpy.zeros((len(label)+1, len(rec)+1),dtype='int32')
     dist_mat[0,:] = range(len(rec) + 1)
@@ -23,7 +72,6 @@ def cmp_result(label,rec):
             ins_score = dist_mat[i,j-1] + 1
             del_score = dist_mat[i-1, j] + 1
             dist_mat[i,j] = min(hit_score, ins_score, del_score)
-
     dist = dist_mat[len(label), len(rec)]
     return dist, len(label)
 

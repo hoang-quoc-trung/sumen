@@ -70,6 +70,17 @@ def main(args):
     )
     
     metrics = trainer.evaluate()
+    common_utils.save_log(
+        loss=metrics['eval_loss'],
+        bleu=metrics['eval_bleu'],
+        edit_distance=metrics['eval_maximun_edit_distance'],
+        exact_match=metrics['eval_exact_match'],
+        wer=metrics['eval_wer'],
+        exprate=metrics['eval_exprate'],
+        exprate_error_1=metrics['eval_exprate_error_1'],
+        exprate_error_2=metrics['eval_exprate_error_2'],
+        exprate_error_3=metrics['eval_exprate_error_3'],
+    )
     logger.info("Results: {}".format(metrics))
 
 
