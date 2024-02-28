@@ -65,6 +65,8 @@ def init_model(config, logger, resume_from_checkpoint):
         device = common_utils.check_device(logger)
         model = model.to(device)
         total_parameter = sum([param.nelement() for param in model.parameters()])
-        logger.info("Number of parameter: {}M ({})".format(round(total_parameter/1000000), total_parameter))
+        logger.info("Number of parameter: {}M ({})".format(
+            round(total_parameter/1000000), total_parameter)
+        )
     
     return model, processor

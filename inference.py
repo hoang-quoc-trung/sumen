@@ -24,9 +24,15 @@ def main(args):
         args.ckpt
     ).to(device)
 
-    # Init processor
+    # Load processor
     processor = AutoProcessor.from_pretrained(args.ckpt)
-
+    task_prompt = processor.tokenizer.bos_token
+    decoder_input_ids = processor.tokenizer(
+        task_prompt,
+        add_special_tokens=False,
+        return_tensors="pt"
+    ).input_ids
+    
     # Load image
     image = Image.open(args.input_image)
     if not image.mode == "RGB":
@@ -37,12 +43,6 @@ def main(args):
         return_tensors="pt",
         data_format="channels_first",
     ).pixel_values
-    task_prompt = processor.tokenizer.bos_token
-    decoder_input_ids = processor.tokenizer(
-        task_prompt,
-        add_special_tokens=False,
-        return_tensors="pt"
-    ).input_ids
     
     # Generate LaTeX expression
     with torch.no_grad():
@@ -50,7 +50,6 @@ def main(args):
             pixel_values.to(device),
             decoder_input_ids=decoder_input_ids.to(device),
             max_length=model.decoder.config.max_length,
-            early_stopping=True,
             pad_token_id=processor.tokenizer.pad_token_id,
             eos_token_id=processor.tokenizer.eos_token_id,
             use_cache=True,

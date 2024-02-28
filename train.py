@@ -24,8 +24,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-os.environ["WANDB_DISABLED"] = "false"
-
 
 def main(args):
     # Load the config file
@@ -35,13 +33,17 @@ def main(args):
     config = yaml.safe_load(open(args.config_path))
     
     # Initialize wandb
-    wandb.login(key=config['wandb']['key'])
-    wandb.init(project=config['wandb']['project_name'])
+    if config['wandb']['enable'] is True:
+        wandb.login(key=config['wandb']['key'])
+        wandb.init(project=config['wandb']['project_name'])
+    else:
+        os.environ["WANDB_DISABLED"] = "true"
     
     # Login to huggingface hub
-    huggingface_hub.login(config['huggingface']['hub_token'])
+    if config['huggingface_hub']['enable'] is True:
+        huggingface_hub.login(config['huggingface_hub']['hub_token'])
     
-    # Initialize model
+    # Initialize model & processor
     model, processor = sumen_model.init_model(
         config,
         logger,
@@ -95,14 +97,14 @@ def main(args):
         logging_steps=config['hyperparams']['logging_steps'],  
         num_train_epochs=config['hyperparams']['epochs'],
         save_total_limit=1,
-        report_to=['wandb'],
+        report_to=['wandb'] if config['wandb']['enable'] else None,
         dataloader_num_workers=config['datasets']['num_workers'],
         gradient_accumulation_steps=config['hyperparams']['gradient_accumulation_steps'],
         eval_accumulation_steps=config['hyperparams']['gradient_accumulation_steps'],
         save_safetensors=True,
-        push_to_hub=True,
-        hub_model_id=config['huggingface']['hub_model_id'],
-        hub_token=config['huggingface']['hub_token'],
+        push_to_hub=config['huggingface_hub']['enable'],
+        hub_model_id=config['huggingface_hub']['hub_model_id'],
+        hub_token=config['huggingface_hub']['hub_token'],
         hub_private_repo=True,
         hub_strategy="checkpoint",
     )
@@ -120,7 +122,9 @@ def main(args):
     # Initialize learning rate scheduler
     num_training_steps = (
         config['hyperparams']['epochs'] * len(train_dataset)
-    ) // (config['datasets']['train']['batch_size'] * config['hyperparams']['gradient_accumulation_steps'])
+    ) // (
+        config['datasets']['train']['batch_size'] * config['hyperparams']['gradient_accumulation_steps']
+    )
     lr_scheduler = transformers.get_cosine_schedule_with_warmup(
         optimizer=optimizer,
         num_warmup_steps=config['hyperparams']['warmup_steps'],

@@ -1,8 +1,10 @@
 wandb:
+  enable: False
   key: ~
   project_name: ~
 
-huggingface:
+huggingface_hub:
+  enable: False
   hub_model_id: ~
   hub_token: ~
 
@@ -22,7 +24,7 @@ datasets:
     batch_size: 8
 
 hyperparams:
-  pretrained_model_name_or_path: facebook/nougat-small
+  pretrained_model_name_or_path: hoang-quoc-trung/sumen-base
   save_dir: ~
   epochs: 10
   eval_steps: 50

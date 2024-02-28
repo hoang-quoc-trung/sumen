@@ -33,7 +33,8 @@ def main(args):
     config = yaml.safe_load(open(args.config_path))
     
     # Login to huggingface hub
-    huggingface_hub.login(config['huggingface']['hub_token'])
+    if config['huggingface_hub']['enable'] is True:
+        huggingface_hub.login(config['huggingface_hub']['hub_token'])
 
     # Get the device
     device = common_utils.check_device(logger)

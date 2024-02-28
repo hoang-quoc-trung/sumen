@@ -6,6 +6,7 @@ import argparse
 from PIL import Image
 from transformers import AutoProcessor
 from transformers import VisionEncoderDecoderModel
+from src.utils import common_utils
 
 
 logging.basicConfig(
@@ -17,21 +18,22 @@ logger.setLevel(logging.INFO)
 
 def main(args):
     # Get the device
-    if torch.cuda.is_available():    
-        device = torch.device("cuda")
-        logger.info("There are {} GPU(s) available.".format(torch.cuda.device_count()))
-        logger.info('We will use the GPU: {}'.format(torch.cuda.get_device_name(0)))
-    else:
-        logger.info('No GPU available, using the CPU instead.')
-        device = torch.device("cpu")
+    device = common_utils.check_device(logger)
 
     # Init model
-    logger.info("Load model from: {}".format(args.ckpt))
+    logger.info("Load model & processor from: {}".format(args.ckpt))
     model = VisionEncoderDecoderModel.from_pretrained(
         args.ckpt
     ).to(device)
-    processor = AutoProcessor.from_pretrained(args.ckpt)
     
+    # Load processor
+    processor = AutoProcessor.from_pretrained(args.ckpt)
+    task_prompt = processor.tokenizer.bos_token
+    decoder_input_ids = processor.tokenizer(
+        task_prompt,
+        add_special_tokens=False,
+        return_tensors="pt"
+    ).input_ids
     
     def inference(input_image):
         # Load image
@@ -45,12 +47,6 @@ def main(args):
             return_tensors="pt",
             data_format="channels_first",
         ).pixel_values
-        task_prompt = processor.tokenizer.bos_token
-        decoder_input_ids = processor.tokenizer(
-            task_prompt,
-            add_special_tokens=False,
-            return_tensors="pt"
-        ).input_ids
         
         # Generate LaTeX expression
         with torch.no_grad():
@@ -58,7 +54,6 @@ def main(args):
                 pixel_values.to(device),
                 decoder_input_ids=decoder_input_ids.to(device),
                 max_length=model.decoder.config.max_length,
-                early_stopping=True,
                 pad_token_id=processor.tokenizer.pad_token_id,
                 eos_token_id=processor.tokenizer.eos_token_id,
                 use_cache=True,
@@ -102,13 +97,13 @@ def main(args):
         clear_button.click(fn=clear_inputs, inputs=None, outputs=[input_image, output_answer])
         gr.Examples(
             examples=[
-                ["assets/example_1.png"],
-                ["assets/example_2.png"],
-                ["assets/example_3.png"],
-                ["assets/example_4.bmp"],
-                ["assets/example_5.bmp"],
-                ["assets/example_6.bmp"],
-                ["assets/example_7.bmp"],
+                "assets/example_1.png",
+                "assets/example_2.png",
+                "assets/example_3.png",
+                "assets/example_4.bmp",
+                "assets/example_5.bmp",
+                "assets/example_6.bmp",
+                "assets/example_7.bmp",
             ],
             inputs=input_image,
             outputs=None,
