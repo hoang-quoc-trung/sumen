@@ -1,7 +1,15 @@
 # <font color="turquoise"> <p style="text-align:center"> Translating math formula images to LaTeX </p> </font>
 
 
-Scaling Up Image-to-LaTeX Performance: Sumen an End-to-End Transformer Model with 1.4 Million Images
+Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model With Large Dataset [Paper](assets/Scaling_Up_Image_to_LaTeX_Performance__Sumen_An_End_to_End_Transformer_Model_With_Large_Dataset.pdf)
+
+## Performance
+
+![](assets/table_result_1.png)
+![](assets/table_result_2.png)
+![](assets/table_result_3.png)
+
+
 
 
 ## Setup
@@ -22,6 +30,13 @@ Scaling Up Image-to-LaTeX Performance: Sumen an End-to-End Transformer Model wit
     
 
 ## Uses
+
+
+#### Available Model Checkpoints
+We provide many Sumen models on Hugging Face, which can be downloaded:
+- Sumen (base) - 349m params: [hoang-quoc-trung/sumen-base](https://huggingface.co/hoang-quoc-trung/sumen-base)
+- Sumen (small) - 247m params: [hoang-quoc-trung/sumen-small](https://huggingface.co/hoang-quoc-trung/sumen-small)
+
 
 #### Training
 ```bash
@@ -53,11 +68,21 @@ arguments:
     --ckpt                       Path to the checkpoint model
 ```
 
+#### Web Demo
+```bash
+python app.py --ckpt src/checkpoints
+
+arguments:
+    -h, --help                   Show this help message and exit
+    --ckpt                       Path to the checkpoint model
+```
 
 ## Dataset
 
+Dataset is available here: [Fusion Image To Latex Dataset](https://www.kaggle.com/datasets/hongtrung/image-to-latex-dataset)
+
 The directory data structure can look as follows:
-* Save all images in a folder, replace the path as `images_root` in config file.
+* Save all images in a folder, replace the path as `root` in config file.
 * Prepare a CSV file with 2 columns:
     * `image_filename`: The name of image file.
     * `latex`: Latex code.
