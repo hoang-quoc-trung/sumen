@@ -120,8 +120,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ckpt",
         type=str,
-        default="checkpoints/sumen-small-checkpoint-7450",
-        help="Path to the checkpoint. (.npz)",
+        default="checkpoints/sumen-base",
+        help="Path to the checkpoint",
     )
     args = parser.parse_args()
     main(args)
