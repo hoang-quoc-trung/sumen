@@ -1,13 +1,12 @@
-# <font color="turquoise"> <p style="text-align:center"> Translating math formula images to LaTeX </p> </font>
+# <font color="turquoise"> <p style="text-align:center"> Translating Math Formula Images To LaTeX Sequences </p> </font>
 
 
-Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model With Large Dataset [Paper](assets/Scaling_Up_Image_to_LaTeX_Performance__Sumen_An_End_to_End_Transformer_Model_With_Large_Dataset.pdf)
+Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model With Large Dataset [Paper](docs/Paper-Scaling_Up_Image_to_LaTeX_Performance_Sumen_An_End_to_End_Transformer_Model_With_Large_Dataset.pdf).
 
 ## Performance
 
 ![](assets/table_result_1.png)
 ![](assets/table_result_2.png)
-![](assets/table_result_3.png)
 
 
 
@@ -32,10 +31,8 @@ Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model Wit
 ## Uses
 
 
-#### Available Model Checkpoints
-We provide many Sumen models on Hugging Face, which can be downloaded:
-- Sumen (base) - 349m params: [hoang-quoc-trung/sumen-base](https://huggingface.co/hoang-quoc-trung/sumen-base)
-- Sumen (small) - 247m params: [hoang-quoc-trung/sumen-small](https://huggingface.co/hoang-quoc-trung/sumen-small)
+#### Available Model Checkpoint
+We provide many Sumen model(base) - 349m params on Hugging Face, which can be downloaded at [hoang-quoc-trung/sumen-base](https://huggingface.co/hoang-quoc-trung/sumen-base).
 
 
 #### Training
@@ -70,7 +67,15 @@ arguments:
 
 #### Web Demo
 ```bash
-python app.py --ckpt src/checkpoints
+streamlit run streamlit_app.py --ckpt src/checkpoints
+
+arguments:
+    -h, --help                   Show this help message and exit
+    --ckpt                       Path to the checkpoint model
+```
+or
+```bash
+python gradio_app.py --ckpt src/checkpoints
 
 arguments:
     -h, --help                   Show this help message and exit
