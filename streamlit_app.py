@@ -84,8 +84,8 @@ def main(args):
         wer = wer_func.compute(predictions=[pred_str], references=[label_str])
         # Compute expression rate score
         exprate, error_1, error_2, error_3 = compute_exprate(
-            predictions=pred_str,
-            references=label_str
+            predictions=[pred_str],
+            references=[label_str]
         )
         return round(wer*100, 2), round(exprate*100, 2), round(error_1*100, 2), round(error_2*100, 2), round(error_3*100, 2)
     
