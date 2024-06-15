@@ -84,7 +84,7 @@ arguments:
 
 ## Dataset
 
-Dataset is available here: [Fusion Image To Latex Dataset](https://www.kaggle.com/datasets/hongtrung/image-to-latex-dataset)
+Dataset is available here: [Fusion Image To Latex Datasets](https://huggingface.co/datasets/hoang-quoc-trung/fusion-image-to-latex-datasets)
 
 The directory data structure can look as follows:
 * Save all images in a folder, replace the path as `root` in config file.
