@@ -1,8 +1,7 @@
 # <font color="turquoise"> <p style="text-align:center"> Translating Math Formula Images To LaTeX Sequences </p> </font>
 
 
-Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model With Large Dataset [Paper](docs/Paper-Scaling_Up_Image_to_LaTeX_Performance_Sumen_An_End_to_End_Transformer_Model_With_Large_Dataset.pdf).
-
+Scaling Up Image-to-LaTeX Performance: Sumen An End-to-End Transformer Model With Large Dataset.
 ## Performance
 
 ![](assets/table_result_1.png)
